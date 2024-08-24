@@ -1,70 +1,100 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import React from 'react';
+import { View, StyleSheet, FlatList, useWindowDimensions } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
+// Example product data
+const products = [
+  { id: '1', name: 'Fresh Apples', price: '$3.00/kg' },
+  { id: '2', name: 'Organic Carrots', price: '$2.50/kg' },
+  { id: '3', name: 'Farm Fresh Eggs', price: '$4.00/dozen' },
+  // Add more products as needed
+];
+
 export default function HomeScreen() {
+  const { width } = useWindowDimensions(); // Get screen width to determine layout
+
+  // Determine the number of columns based on screen width
+  const numColumns = width > 600 ? 2 : 1; // 2 columns for wider screens, 1 for smaller
+
+  // Render a single product item
+  const renderProduct = ({ item }) => (
+    <View style={styles.productCard}>
+      <View style={styles.productImagePlaceholder} />
+      <ThemedText type="productName">{item.name}</ThemedText>
+      <ThemedText type="productPrice">{item.price}</ThemedText>
+    </View>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <ThemedText type="title">Farmers' Produce Store</ThemedText>
+        <ThemedText type="subtitle">Fresh and Organic Produce Directly from the Farm</ThemedText>
+      </View>
+      
+      <FlatList
+        data={products}
+        renderItem={renderProduct}
+        keyExtractor={item => item.id}
+        numColumns={numColumns} // Number of columns based on screen width
+        columnWrapperStyle={styles.columnWrapper} // Style for columns
+        contentContainerStyle={styles.productsContainer} // Style for container
+      />
+
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <ThemedText type="subtitle">Explore Our Produce</ThemedText>
         <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
+          Tap the Explore tab to view more products and details.
         </ThemedText>
       </ThemedView>
+
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
+        <ThemedText type="subtitle">Get in Touch</ThemedText>
         <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
+          Have questions? Visit our Profile tab to contact us.
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#E8F5E9', // Light green background
+  },
+  header: {
+    padding: 16,
+    backgroundColor: '#4CAF50', // Fresh green for header background
     alignItems: 'center',
-    gap: 8,
+  },
+  productsContainer: {
+    padding: 16,
+  },
+  columnWrapper: {
+    justifyContent: 'space-between', // Distribute columns with space
+  },
+  productCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    flex: 1, // Allow the card to take up available space
+    elevation: 2, // Shadow for Android
+    shadowColor: '#000000', // Shadow for iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  productImagePlaceholder: {
+    height: 120,
+    backgroundColor: '#C8E6C9', // Light green placeholder for images
+    marginBottom: 8,
+    borderRadius: 8,
   },
   stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+    padding: 16,
+    marginBottom: 16,
   },
 });
