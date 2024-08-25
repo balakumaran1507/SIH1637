@@ -38,7 +38,7 @@ export default function HomeScreen() {
         renderItem={renderProduct}
         keyExtractor={item => item.id}
         numColumns={numColumns} // Number of columns based on screen width
-        columnWrapperStyle={styles.columnWrapper} // Style for columns
+        {...(numColumns > 1 && { columnWrapperStyle: styles.columnWrapper })} // Conditionally apply columnWrapperStyle
         contentContainerStyle={styles.productsContainer} // Style for container
       />
 
